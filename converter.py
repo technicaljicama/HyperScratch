@@ -58,7 +58,10 @@ def export_code(filename):
     f.close()
 
 def parse_blocks(array, name):
-    gBlocks.append([gTarget, array["opcode"], array["next"], name, array["inputs"]])
+    if array["shadow"] == True:
+        gBlocks.append([gTarget, array["opcode"], array["next"], name, array["fields"]])
+    else:
+        gBlocks.append([gTarget, array["opcode"], array["next"], name, array["inputs"]])
 
 def rename_blocks(blocks):
     global gBlocks
@@ -83,7 +86,7 @@ def parse_costumes(costumes):
     gCostumes.append([costumes["name"], costumes["md5ext"], costumes["rotationCenterX"], costumes["rotationCenterY"]])
 
 def parse_sprite(sprite, costume):
-    gSprites.append([sprite["name"], 240+sprite["x"]-costume["rotationCenterX"], 180+sprite["y"]-costume["rotationCenterY"], sprite["currentCostume"], costume["md5ext"], sprite["layerOrder"]])
+    gSprites.append([sprite["name"], int(240+sprite["x"]-costume["rotationCenterX"]), int(180-(sprite["y"]+costume["rotationCenterY"])), sprite["currentCostume"], costume["md5ext"], sprite["layerOrder"]])
 
 if __name__ == "__main__":
     try:
@@ -116,7 +119,7 @@ if __name__ == "__main__":
     
     # print("Parsing costumes...")
     # parse_costumes()
-    # print(gCostumes)
+    print(gBlocks)
     print("Converting svgs...")
     for svg in gCostumes:
         convert_svg(svg[1])
