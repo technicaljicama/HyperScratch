@@ -1,1 +1,0 @@
-/usr/bin/c++  -std=c++17 -g CMakeFiles/HyperScratch.dir/src/main.cpp.o CMakeFiles/HyperScratch.dir/src/render.cpp.o CMakeFiles/HyperScratch.dir/src/main_unix.cpp.o -o HyperScratch  -lSDL2 -lSDL2_image -lSDL2_mixer 

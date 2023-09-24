@@ -1,3 +1,0 @@
-/home/jicama/p2/HyperScratch/engine/CMakeFiles/HyperScratch.dir
-/home/jicama/p2/HyperScratch/engine/CMakeFiles/edit_cache.dir
-/home/jicama/p2/HyperScratch/engine/CMakeFiles/rebuild_cache.dir
