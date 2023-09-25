@@ -5,9 +5,9 @@
 MainApp::MainApp() {
     renderer.Setup("Hyper Scratch", 480, 360);
     
-    for(int i = 0; i < MAX_SPRITES; i++) {
-        g_Textures[i] = renderer.LoadSprite(sprites[i].fileName);
-        renderer.getWH(g_Textures[i], sprites[i].w, sprites[i].h);
+    for(int i = 0; i < MAX_COSTUMES; i++) {
+        g_Textures[i] = renderer.LoadSprite(costumes[i].fileName);
+        renderer.getWH(g_Textures[i], costumes[i].w, costumes[i].h);
     }
 }
 
@@ -39,7 +39,7 @@ void MainApp::update() {
         
         
         // for(int i = 0; i < MAX_SPRITES; i++) {
-        renderer.DrawSprite(g_Textures[i], sprites[i].x, sprites[i].y, sprites[i].w, sprites[i].h, 0, 0);
+        renderer.DrawSprite(g_Textures[i], sprites[0].x, sprites[0].y, costumes[i].w, costumes[i].h, 0, 0);
         // }
         
         renderer.Update();

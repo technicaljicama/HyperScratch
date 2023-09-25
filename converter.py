@@ -18,7 +18,7 @@ svg to png converter
 #[What object?, What opcode?, Next opcode, This name, args]
 gBlocks = []
 
-#[name, filename, centerX, centerY]
+#[name, filename, centerX, centerY, sprite_index]
 gCostumes = []
 
 #[name, x, y, current, costume_name, layer]
@@ -26,6 +26,7 @@ gSprites = []
 
 gCode = """
 #include "sprite.h"\n
+#include "costume.h"\n
 """
 
 gBroadcasts = []
@@ -46,7 +47,18 @@ def write_sprites():
 
     gCode += """#define MAX_SPRITES """+str(len(gSprites))+"""\ninline Sprite sprites["""+str(len(gSprites))+"""] = {\n"""
     for sprite in gSprites:
-        gCode += """\t{\""""+sprite[0]+"""\", """+str(sprite[1])+""", """+str(sprite[2])+""", """+str(sprite[3])+""", \""""+sprite[4][:-4]+".png"+"""\", """+str(sprite[5])+""" ,0 ,0},\n"""
+        gCode += """\t{\""""+sprite[0]+"""\", """+str(sprite[1])+""", """+str(sprite[2])+""", """+str(sprite[3] - 1)+""", \""""+sprite[4][:-4]+".png"+"""\", """+str(sprite[5])+"""},\n"""
+        
+    gCode += """};\n"""
+        
+    # print(gCode)
+    
+def write_costumes():
+    global gCode
+
+    gCode += """#define MAX_COSTUMES """+str(len(gCostumes))+"""\ninline Costume costumes["""+str(len(gCostumes))+"""] = {\n"""
+    for costume in gCostumes:
+        gCode += """\t{\""""+costume[0]+"""\", \""""+str(costume[1][:-4])+".png\", """+str(costume[4])+""" ,0 ,0},\n"""
         
     gCode += """};\n"""
         
@@ -82,13 +94,14 @@ def rename_blocks(blocks):
         gFixedBlocks = json.dumps(gBlocks).replace(name[2], new_name)
         gBlocks = json.loads(gFixedBlocks)
 
-def parse_costumes(costumes):
-    gCostumes.append([costumes["name"], costumes["md5ext"], costumes["rotationCenterX"], costumes["rotationCenterY"]])
+def parse_costumes(costumes, sprite_index):
+    gCostumes.append([costumes["name"], costumes["md5ext"], costumes["rotationCenterX"], costumes["rotationCenterY"], sprite_index])
 
 def parse_sprite(sprite, costume):
     gSprites.append([sprite["name"], int(240+sprite["x"]-costume["rotationCenterX"]), int(180-(sprite["y"]+costume["rotationCenterY"])), sprite["currentCostume"], costume["md5ext"], sprite["layerOrder"]])
 
 if __name__ == "__main__":
+    spriteidx = -1
     try:
         # .read()
         jo = json.load(open("project.json", "r"))
@@ -107,10 +120,11 @@ if __name__ == "__main__":
             
         print(f"Parsing costumes in target {gTarget}...")
         if objects["isStage"] == False:
+            spriteidx += 1
             for costume in objects["costumes"]:
-                parse_costumes(costume)
+                parse_costumes(costume, spriteidx)
                 
-                parse_sprite(objects, costume)
+            parse_sprite(objects, costume)
         else:
             print("Parse stage...")
     
@@ -126,7 +140,7 @@ if __name__ == "__main__":
         
     print("Writing sprite code...")
     write_sprites()
-    
+    write_costumes()
     # print(gCode)
     
     export_code("project.h")

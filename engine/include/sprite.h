@@ -8,8 +8,6 @@ typedef struct {
     int currentCostume;
     std::string fileName;
     int layer;
-    int w;
-    int h;
 } Sprite;
 #else
 class Sprite {
