@@ -25,12 +25,16 @@ gCostumes = []
 gSprites = []
 
 gCode = """
-#include "sprite.h"\n
+#include "sprite.h"
 #include "costume.h"\n
+#include "blocks.h"\n
 """
 
 gBroadcasts = []
 gVariables = []
+
+#[event name, junk name]
+gEventBlocks = []
 
 gFixedBlocks = ""
 gTarget = -1
@@ -64,11 +68,12 @@ def parse_argument(block, next_block):
 
 def write_blocks():
     global gCode
+    global gEventBlocks
     #Problem: Stage has no code and starts at 0
     #Sprite has index 1
     #maybe an index for all sprites/stages?
     iterator = -1
-    has_block = True
+    has_block = False
     for block in gBlocks:
         iterator += 1
         if block[5] != True:
@@ -76,9 +81,8 @@ def write_blocks():
                 if has_block:
                     gCode += """};\n"""
                 has_block = False
-                gCode += """inline void """+block[1]+block[3]+"""(Sprite _sprite) {\n"""
-            # elif block[1].startswith("event_") and not has_block or has_block:
-                # gCode += """};\n"""
+                gCode += """inline void """+block[1]+block[3]+"""(Sprite _sprite) {\n""" #TODO: Implement argument parser for events
+                gEventBlocks.append([block[1], block[3]])
             else:
                 has_block = True
                 if block[4] != {}:
@@ -86,6 +90,31 @@ def write_blocks():
                 else:
                     gCode += """\t"""+block[1]+"""(_sprite);\n"""
                     
+    gCode += """};\n"""
+
+def write_block_lists():
+    global gCode
+    # global gEventBlocks
+    sprite_clicked = []
+    green_flag = []
+    
+    #Will be changed to be done by one function for both problems (See line 83)
+        
+    for ev_block in gEventBlocks:
+        match ev_block[0]:
+            case "event_whenthisspriteclicked":
+                sprite_clicked.append(ev_block[0]+ev_block[1])
+            case "event_whenflagclicked":
+                green_flag.append(ev_block[0]+ev_block[1])
+                
+    gCode += """\ninline void(*_spriteClicked["""+str(len(sprite_clicked))+"""])(Sprite _sprite) {\n"""
+    for event in sprite_clicked:
+        gCode += """\t&"""+event+""",\n"""
+    gCode += """};\n"""
+    
+    gCode += """\ninline void(*_greenFlagClicked["""+str(len(sprite_clicked))+"""])(Sprite _sprite) {\n"""
+    for event in green_flag:
+        gCode += """\t&"""+event+""",\n"""
     gCode += """};\n"""
 
 def write_costumes():
@@ -179,6 +208,7 @@ if __name__ == "__main__":
     
     print("Converting blocks to c++...")
     write_blocks()
+    write_block_lists()
     #print(gCode)
     
     export_code("project.h")
