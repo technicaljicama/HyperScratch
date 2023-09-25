@@ -15,7 +15,7 @@ svg to png converter
 
 #480x360 res
 
-#[What object?, What opcode?, Next opcode, This name, args]
+#[What object?, What opcode?, Next opcode, This name, args, shadow(hidden)]
 gBlocks = []
 
 #[name, filename, centerX, centerY, sprite_index]
@@ -52,7 +52,42 @@ def write_sprites():
     gCode += """};\n"""
         
     # print(gCode)
-    
+
+def parse_argument(block, next_block):
+    #Will improve this later... (I hope)
+    args = block[4]
+    match block[1]:
+        case "looks_switchcostumeto":
+            if next_block[1] == "looks_costume" and next_block[3] == args["COSTUME"][1]:
+                return "\""+next_block[4]["COSTUME"][0]+"\""
+                
+
+def write_blocks():
+    global gCode
+    #Problem: Stage has no code and starts at 0
+    #Sprite has index 1
+    #maybe an index for all sprites/stages?
+    iterator = -1
+    has_block = True
+    for block in gBlocks:
+        iterator += 1
+        if block[5] != True:
+            if block[1].startswith("event_"):
+                if has_block:
+                    gCode += """};\n"""
+                has_block = False
+                gCode += """inline void """+block[1]+block[3]+"""(Sprite _sprite) {\n"""
+            # elif block[1].startswith("event_") and not has_block or has_block:
+                # gCode += """};\n"""
+            else:
+                has_block = True
+                if block[4] != {}:
+                    gCode += """\t"""+block[1]+"""("""+parse_argument(block, gBlocks[iterator + 1])+""", _sprite);\n"""
+                else:
+                    gCode += """\t"""+block[1]+"""(_sprite);\n"""
+                    
+    gCode += """};\n"""
+
 def write_costumes():
     global gCode
 
@@ -71,9 +106,9 @@ def export_code(filename):
 
 def parse_blocks(array, name):
     if array["shadow"] == True:
-        gBlocks.append([gTarget, array["opcode"], array["next"], name, array["fields"]])
+        gBlocks.append([gTarget, array["opcode"], array["next"], name, array["fields"], True])
     else:
-        gBlocks.append([gTarget, array["opcode"], array["next"], name, array["inputs"]])
+        gBlocks.append([gTarget, array["opcode"], array["next"], name, array["inputs"], False])
 
 def rename_blocks(blocks):
     global gBlocks
@@ -141,6 +176,9 @@ if __name__ == "__main__":
     print("Writing sprite code...")
     write_sprites()
     write_costumes()
-    # print(gCode)
+    
+    print("Converting blocks to c++...")
+    write_blocks()
+    #print(gCode)
     
     export_code("project.h")
