@@ -2,7 +2,9 @@
 #include "render.h"
 
 #include <ctime>
+#include <iostream>
 // #include "project.h"
+
 
 MainApp::MainApp() {
     std::srand(time(NULL));
@@ -12,7 +14,10 @@ MainApp::MainApp() {
         g_Textures[i] = renderer.LoadSprite(costumes[i].fileName);
         renderer.getWH(g_Textures[i], costumes[i].w, costumes[i].h);
     }
-    _greenFlagClicked[0](sprites[0]);
+    
+    for(int i = 0; i < MAX_SPRITES; i++) {
+       _greenFlagClicked[i](sprites[i]); //WARNING: THIS IS NEEDS TO BE CHANGED
+    }
 }
 
 void MainApp::update() {
@@ -43,13 +48,17 @@ void MainApp::update() {
             }
         }
         if(gWhileLoop != -1) {
-            _whileLoops[gWhileLoop](sprites[0]);
+            for(int i = 0; i < gWhileLoop; i++) {
+                _whileLoops[i](sprites[i]); //WARNING: THIS IS NEEDS TO BE CHANGED
+            }
+            
         }
         // std::cout << sprites[0].currentCostume << std::endl;
         
-        // for(int i = 0; i < MAX_SPRITES; i++) {
-        renderer.DrawSprite(g_Textures[sprites[0].currentCostume], sprites[0].x, sprites[0].y, costumes[sprites[0].currentCostume].w, costumes[sprites[0].currentCostume].h, 0, 0);
-        // }
+        for(int i = 0; i < MAX_SPRITES; i++) {
+            // std::cout << i << std::endl;
+            renderer.DrawSprite(g_Textures[sprites[i].currentCostume], sprites[i].x, sprites[i].y, costumes[sprites[i].currentCostume].w, costumes[sprites[i].currentCostume].h, 0, 0);
+         }
         
         renderer.Update();
     }

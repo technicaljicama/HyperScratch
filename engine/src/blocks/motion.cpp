@@ -9,5 +9,12 @@ void motion_goto(std::string type, Sprite &inst) {
     } else if(type == "_mouse_") {
         inst.x = (mX-costumes[inst.currentCostume].centerX);
         inst.y = (mY-costumes[inst.currentCostume].centerY);
+    } else {
+        for(int i = 0; i < MAX_SPRITES; i++) {
+            if(sprites[i].name == type) {
+                inst.x = costumes[sprites[i].currentCostume].centerX;
+                inst.y = costumes[sprites[i].currentCostume].centerY;
+            }
+        }
     }
 }

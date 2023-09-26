@@ -55,7 +55,7 @@ def write_sprites():
 
     gCode += """#define MAX_SPRITES """+str(len(gSprites))+"""\ninline Sprite sprites["""+str(len(gSprites))+"""] = {\n"""
     for sprite in gSprites:
-        gCode += """\t{\""""+sprite[0]+"""\", """+str(sprite[1])+""", """+str(sprite[2])+""", """+str(sprite[3] - 1)+""", \""""+sprite[4][:-4]+".png"+"""\", """+str(sprite[5])+"""},\n"""
+        gCode += """\t{\""""+sprite[0]+"""\", """+str(sprite[1])+""", """+str(sprite[2])+""", """+str(sprite[3])+""", \""""+sprite[4][:-4]+".png"+"""\", """+str(sprite[5])+"""},\n"""
         
     gCode += """};\n"""
         
@@ -149,7 +149,7 @@ def write_block_lists():
         gCode += """\t&"""+event+""",\n"""
     gCode += """};\n"""
     
-    gCode += """\ninline void(*_greenFlagClicked["""+str(len(sprite_clicked))+"""])(Sprite &_sprite) {\n"""
+    gCode += """\ninline void(*_greenFlagClicked["""+str(len(green_flag))+"""])(Sprite &_sprite) {\n"""
     for event in green_flag:
         gCode += """\t&"""+event+""",\n"""
     gCode += """};\n"""
@@ -198,11 +198,12 @@ def rename_blocks(blocks):
 def parse_costumes(costumes, sprite_index):
     gCostumes.append([costumes["name"], costumes["md5ext"], costumes["rotationCenterX"], costumes["rotationCenterY"], sprite_index])
 
-def parse_sprite(sprite, costume):
-    gSprites.append([sprite["name"], int(240+sprite["x"]-costume["rotationCenterX"]), int(180-(sprite["y"]+costume["rotationCenterY"])), sprite["currentCostume"], costume["md5ext"], sprite["layerOrder"]])
+def parse_sprite(sprite, costume, currentCostume):
+    gSprites.append([sprite["name"], int(240+sprite["x"]-costume["rotationCenterX"]), int(180-(sprite["y"]+costume["rotationCenterY"])), sprite["currentCostume"]+currentCostume, costume["md5ext"], sprite["layerOrder"]])
 
 if __name__ == "__main__":
     spriteidx = -1
+    currentCostume = -1
     try:
         # .read()
         jo = json.load(open("project.json", "r"))
@@ -223,9 +224,10 @@ if __name__ == "__main__":
         if objects["isStage"] == False:
             spriteidx += 1
             for costume in objects["costumes"]:
+                currentCostume += 1
                 parse_costumes(costume, spriteidx)
                 
-            parse_sprite(objects, costume)
+            parse_sprite(objects, costume, currentCostume)
         else:
             print("Parse stage...")
     
