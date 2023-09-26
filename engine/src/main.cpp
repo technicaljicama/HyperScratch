@@ -17,6 +17,7 @@ MainApp::MainApp() {
     
     for(int i = 0; i < MAX_SPRITES; i++) {
        _greenFlagClicked[i](sprites[i]); //WARNING: THIS IS NEEDS TO BE CHANGED
+       // std::cout << i << std::endl;
     }
 }
 
@@ -48,10 +49,10 @@ void MainApp::update() {
             }
         }
         if(gWhileLoop != -1) {
-            for(int i = 0; i < gWhileLoop; i++) {
+            for(int i = 0; i < gWhileLoop+1; i++) {
                 _whileLoops[i](sprites[i]); //WARNING: THIS IS NEEDS TO BE CHANGED
+                // std::cout << gWhileLoop << std::endl;
             }
-            
         }
         // std::cout << sprites[0].currentCostume << std::endl;
         

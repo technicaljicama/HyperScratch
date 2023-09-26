@@ -95,6 +95,7 @@ def write_blocks():
     global gCode
     global gEventBlocks
     global gControlBlocks
+    prev_owner = 1 #(stage is 0)
     #Problem: Stage has no code and starts at 0
     #Sprite has index 1
     #maybe an index for all sprites/stages?
@@ -103,6 +104,9 @@ def write_blocks():
     for block in gBlocks:
         iterator += 1
         if block[5] != True:
+            if block[0] != prev_owner:
+                gCode += """//"""
+                
             if block[1].startswith("event_"):
                 if has_block:
                     gCode += """};\n"""
@@ -118,6 +122,8 @@ def write_blocks():
             else:
                 has_block = True
                 parse_sline(block, iterator)
+                
+            prev_owner = block[0]
                     
     gCode += """};\n"""
 

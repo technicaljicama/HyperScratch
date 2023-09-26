@@ -12,9 +12,10 @@ void motion_goto(std::string type, Sprite &inst) {
     } else {
         for(int i = 0; i < MAX_SPRITES; i++) {
             if(sprites[i].name == type) {
-                inst.x = costumes[sprites[i].currentCostume].centerX;
-                inst.y = costumes[sprites[i].currentCostume].centerY;
+                inst.x = sprites[i].x + (costumes[sprites[i].currentCostume].centerX - costumes[inst.currentCostume].centerX);
+                inst.y = sprites[i].y + (costumes[sprites[i].currentCostume].centerY - costumes[inst.currentCostume].centerY);
             }
         }
+
     }
 }

@@ -20,39 +20,39 @@ inline Costume costumes[6] = {
 	{"abby-c", "34a175600dc009a521eb46fdbbbeeb67.png", 1, 0 , 0, 32, 100},
 	{"abby-d", "45de34b47a2ce22f6f5d28bb35a44ff5.png", 1, 0 , 0, 32, 101},
 };
-inline void event_whenthisspriteclickedblock_0gregory8(Sprite &_sprite) {
+inline void event_whenthisspriteclickedblock_0matthew9(Sprite &_sprite) {
 	looks_switchcostumeto("costume2", _sprite);
 };
-inline void event_whenflagclickedblock_3micah0(Sprite &_sprite) {
+inline void event_whenflagclickedblock_3robert8(Sprite &_sprite) {
 	looks_switchcostumeto("costume1", _sprite);
 	motion_goto("_mouse_", _sprite);
 	gWhileLoop++;
 };
-inline void control_foreverblock_8sara0(Sprite &_sprite) {
+inline void control_foreverblock_8chelsey9(Sprite &_sprite) {
 	motion_goto("Abby", _sprite);
 	looks_switchcostumeto("costume1", _sprite);
 	looks_switchcostumeto("costume1", _sprite);
 	motion_goto("Abby", _sprite);
-	motion_goto("_random_", _sprite);
+//	motion_goto("_random_", _sprite);
 };
-inline void event_whenflagclickedblock_17patricia7(Sprite &_sprite) {
+inline void event_whenflagclickedblock_17aron7(Sprite &_sprite) {
 	gWhileLoop++;
 };
-inline void control_foreverblock_18roy4(Sprite &_sprite) {
+inline void control_foreverblock_18rosemary0(Sprite &_sprite) {
 	motion_goto("_random_", _sprite);
 };
 
 #define MAX_WHILES 2
 inline void(*_whileLoops[2])(Sprite &_sprite) {
-	&control_foreverblock_8sara0,
-	&control_foreverblock_18roy4,
+	&control_foreverblock_8chelsey9,
+	&control_foreverblock_18rosemary0,
 };
 
 inline void(*_spriteClicked[1])(Sprite &_sprite) {
-	&event_whenthisspriteclickedblock_0gregory8,
+	&event_whenthisspriteclickedblock_0matthew9,
 };
 
 inline void(*_greenFlagClicked[2])(Sprite &_sprite) {
-	&event_whenflagclickedblock_3micah0,
-	&event_whenflagclickedblock_17patricia7,
+	&event_whenflagclickedblock_3robert8,
+	&event_whenflagclickedblock_17aron7,
 };
