@@ -9,10 +9,12 @@ MainApp::MainApp() {
         g_Textures[i] = renderer.LoadSprite(costumes[i].fileName);
         renderer.getWH(g_Textures[i], costumes[i].w, costumes[i].h);
     }
+    _greenFlagClicked[0](sprites[0]);
 }
 
 void MainApp::update() {
-    int i = 0;
+    // int i = 0;
+    
     while(!quit) {
         renderer.Start();
         
@@ -23,23 +25,23 @@ void MainApp::update() {
                     break;
                 case SDL_MOUSEBUTTONDOWN:
                     if(mouse == false) { 
-                        i = 1;
+                        // i = 1;
                         mouse = true;
                     } else {
-                        i = 0;
+                        // i = 0;
                         mouse = false;
                     }
                     break;
                 case SDL_MOUSEBUTTONUP:
                     mouse = false;
-                    i = 0;
+                    // i = 0;
                     break;
             }
         }
-        
+        // std::cout << sprites[0].currentCostume << std::endl;
         
         // for(int i = 0; i < MAX_SPRITES; i++) {
-        renderer.DrawSprite(g_Textures[i], sprites[0].x, sprites[0].y, costumes[i].w, costumes[i].h, 0, 0);
+        renderer.DrawSprite(g_Textures[sprites[0].currentCostume], sprites[0].x, sprites[0].y, costumes[sprites[0].currentCostume].w, costumes[sprites[0].currentCostume].h, 0, 0);
         // }
         
         renderer.Update();

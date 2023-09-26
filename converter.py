@@ -81,7 +81,7 @@ def write_blocks():
                 if has_block:
                     gCode += """};\n"""
                 has_block = False
-                gCode += """inline void """+block[1]+block[3]+"""(Sprite _sprite) {\n""" #TODO: Implement argument parser for events
+                gCode += """inline void """+block[1]+block[3]+"""(Sprite &_sprite) {\n""" #TODO: Implement argument parser for events
                 gEventBlocks.append([block[1], block[3]])
             else:
                 has_block = True
@@ -107,12 +107,12 @@ def write_block_lists():
             case "event_whenflagclicked":
                 green_flag.append(ev_block[0]+ev_block[1])
                 
-    gCode += """\ninline void(*_spriteClicked["""+str(len(sprite_clicked))+"""])(Sprite _sprite) {\n"""
+    gCode += """\ninline void(*_spriteClicked["""+str(len(sprite_clicked))+"""])(Sprite &_sprite) {\n"""
     for event in sprite_clicked:
         gCode += """\t&"""+event+""",\n"""
     gCode += """};\n"""
     
-    gCode += """\ninline void(*_greenFlagClicked["""+str(len(sprite_clicked))+"""])(Sprite _sprite) {\n"""
+    gCode += """\ninline void(*_greenFlagClicked["""+str(len(sprite_clicked))+"""])(Sprite &_sprite) {\n"""
     for event in green_flag:
         gCode += """\t&"""+event+""",\n"""
     gCode += """};\n"""
