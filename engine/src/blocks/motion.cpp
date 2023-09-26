@@ -7,7 +7,7 @@ void motion_goto(std::string type, Sprite &inst) {
         inst.y = (int)std::rand() % 360;
         // std::cout << inst.x << std::endl;
     } else if(type == "_mouse_") {
-        inst.x = mX;
-        inst.y = mY;
+        inst.x = (mX-costumes[inst.currentCostume].centerX);
+        inst.y = (mY-costumes[inst.currentCostume].centerY);
     }
 }

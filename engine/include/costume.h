@@ -6,4 +6,6 @@ typedef struct {
     int spriteIndex;
     int w;
     int h;
+    int centerX;
+    int centerY;
 } Costume;

@@ -159,7 +159,7 @@ def write_costumes():
 
     gCode += """#define MAX_COSTUMES """+str(len(gCostumes))+"""\ninline Costume costumes["""+str(len(gCostumes))+"""] = {\n"""
     for costume in gCostumes:
-        gCode += """\t{\""""+costume[0]+"""\", \""""+str(costume[1][:-4])+".png\", """+str(costume[4])+""" ,0 ,0},\n"""
+        gCode += """\t{\""""+costume[0]+"""\", \""""+str(costume[1][:-4])+".png\", """+str(costume[4])+""", 0 , 0, """+str(int(costume[2]))+""", """+str(int(costume[3]))+"""},\n"""
         
     gCode += """};\n"""
         
