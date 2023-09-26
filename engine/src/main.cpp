@@ -20,6 +20,7 @@ void MainApp::update() {
     
     while(!quit) {
         renderer.Start();
+        renderer.getMousePos(mX, mY);
         
         while(SDL_PollEvent(&event)) {
             switch(event.type) {
@@ -41,7 +42,9 @@ void MainApp::update() {
                     break;
             }
         }
-        renderer.getMousePos(mX, mY);
+        if(gWhileLoop != -1) {
+            _whileLoops[gWhileLoop](sprites[0]);
+        }
         // std::cout << sprites[0].currentCostume << std::endl;
         
         // for(int i = 0; i < MAX_SPRITES; i++) {

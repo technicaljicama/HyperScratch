@@ -28,6 +28,7 @@ gCode = """
 #include "sprite.h"
 #include "costume.h"\n
 #include "blocks.h"\n
+inline int gWhileLoop = -1;\n
 """
 
 gBroadcasts = []
@@ -35,6 +36,9 @@ gVariables = []
 
 #[event name, junk name]
 gEventBlocks = []
+
+#
+gControlBlocks = []
 
 gFixedBlocks = ""
 gTarget = -1
@@ -57,8 +61,18 @@ def write_sprites():
         
     # print(gCode)
 
+def parse_sline(block, iterator):
+    global gCode
+    
+    if block[4] != {}:
+        gCode += """\t"""+block[1]+"""("""+parse_argument(block, gBlocks[iterator + 1])+""", _sprite);\n"""
+    else:
+        gCode += """\t"""+block[1]+"""(_sprite);\n"""
+
 def parse_argument(block, next_block):
     #Will improve this later... (I hope)
+    global gCode
+    
     args = block[4]
     match block[1]:
         case "looks_switchcostumeto":
@@ -67,11 +81,20 @@ def parse_argument(block, next_block):
         case "motion_goto":
             if next_block[1] == "motion_goto_menu" and next_block[3] == args["TO"][1]:
                 return "\""+next_block[4]["TO"][0]+"\""
-                
+            
+        case "control_forever":
+            iterator = -1
+            to_find = next_block[4]["SUBSTACK"][1]
+            for block in gBlocks:
+                iterator += 1
+                if block[3] == to_find:
+                    parse_sline(block, iterator)
+            
 
 def write_blocks():
     global gCode
     global gEventBlocks
+    global gControlBlocks
     #Problem: Stage has no code and starts at 0
     #Sprite has index 1
     #maybe an index for all sprites/stages?
@@ -86,12 +109,15 @@ def write_blocks():
                 has_block = False
                 gCode += """inline void """+block[1]+block[3]+"""(Sprite &_sprite) {\n""" #TODO: Implement argument parser for events
                 gEventBlocks.append([block[1], block[3]])
+            elif block[1] == "control_forever":
+                gCode += """\tgWhileLoop++;\n"""
+                gCode += """};\n"""
+                gCode += """inline void """+block[1]+block[3]+"""(Sprite &_sprite) {\n"""
+                gControlBlocks.append([block[1], block[3]])
+                parse_argument(block, block)
             else:
                 has_block = True
-                if block[4] != {}:
-                    gCode += """\t"""+block[1]+"""("""+parse_argument(block, gBlocks[iterator + 1])+""", _sprite);\n"""
-                else:
-                    gCode += """\t"""+block[1]+"""(_sprite);\n"""
+                parse_sline(block, iterator)
                     
     gCode += """};\n"""
 
@@ -110,6 +136,14 @@ def write_block_lists():
             case "event_whenflagclicked":
                 green_flag.append(ev_block[0]+ev_block[1])
                 
+    # for ev_block in gControlBlocks:
+        
+    gCode += """\n#define MAX_WHILES """+str(len(gControlBlocks))
+    gCode += """\ninline void(*_whileLoops["""+str(len(gControlBlocks))+"""])(Sprite &_sprite) {\n"""
+    for event in gControlBlocks:
+        gCode += """\t&"""+event[0]+event[1]+""",\n"""
+    gCode += """};\n"""
+    
     gCode += """\ninline void(*_spriteClicked["""+str(len(sprite_clicked))+"""])(Sprite &_sprite) {\n"""
     for event in sprite_clicked:
         gCode += """\t&"""+event+""",\n"""
