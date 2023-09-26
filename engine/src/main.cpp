@@ -1,8 +1,11 @@
 #include "main.h" 
 #include "render.h"
+
+#include <ctime>
 // #include "project.h"
 
 MainApp::MainApp() {
+    std::srand(time(NULL));
     renderer.Setup("Hyper Scratch", 480, 360);
     
     for(int i = 0; i < MAX_COSTUMES; i++) {
@@ -38,6 +41,7 @@ void MainApp::update() {
                     break;
             }
         }
+        renderer.getMousePos(mX, mY);
         // std::cout << sprites[0].currentCostume << std::endl;
         
         // for(int i = 0; i < MAX_SPRITES; i++) {

@@ -21,6 +21,7 @@ public:
     void update_win_size(int w, int h);
     void deleteTex(SDL_Texture* tex);
     void getWH(SDL_Texture* tex, int &w, int &h);
+    void getMousePos(int &x, int &y);
     ~Render();
 private:
     SDL_Window *window;

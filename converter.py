@@ -64,6 +64,9 @@ def parse_argument(block, next_block):
         case "looks_switchcostumeto":
             if next_block[1] == "looks_costume" and next_block[3] == args["COSTUME"][1]:
                 return "\""+next_block[4]["COSTUME"][0]+"\""
+        case "motion_goto":
+            if next_block[1] == "motion_goto_menu" and next_block[3] == args["TO"][1]:
+                return "\""+next_block[4]["TO"][0]+"\""
                 
 
 def write_blocks():

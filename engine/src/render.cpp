@@ -83,6 +83,10 @@ void Render::DrawRect(SDL_Rect rect) {
     SDL_RenderFillRect(rend, &rect);
 }
 
+void Render::getMousePos(int &x, int &y) {
+    SDL_GetMouseState(&x, &y);
+}
+
 void Render::update_win_size(int w, int h) {
     SDL_SetWindowSize(window, w, h);
 }
