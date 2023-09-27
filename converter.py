@@ -44,11 +44,12 @@ gFixedBlocks = ""
 gTarget = -1
 
 def convert_svg(name):
-    f = open(name, "rb")
-    
-    svg2png(bytestring=f.read(), write_to=name[:-4]+".png")
-    
-    f.close()
+    if "svg" in name:
+        f = open(name, "rb")
+        
+        svg2png(bytestring=f.read(), write_to=name[:-4]+".png")
+        
+        f.close()
 
 def write_sprites():
     global gCode
@@ -209,6 +210,7 @@ def parse_sprite(sprite, costume, currentCostume):
 
 if __name__ == "__main__":
     spriteidx = -1
+    stageidx = -1
     currentCostume = -1
     try:
         # .read()
@@ -236,6 +238,12 @@ if __name__ == "__main__":
             parse_sprite(objects, costume, currentCostume)
         else:
             print("Parse stage...")
+            stageidx += 1
+            for costume in objects["costumes"]:
+                # currentCostume += 1
+                # parse_costumes(costume, spriteidx)
+                
+            # parse_sprite(objects, costume, currentCostume)
     
     print("Renaming blocks...")
     rename_blocks(gBlocks)

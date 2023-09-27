@@ -18,7 +18,8 @@ HyperScratch
 *.lo
 *.o
 *.obj
-
+*.png
+*.svg
 # Precompiled Headers
 *.gch
 *.pch
