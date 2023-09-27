@@ -69,7 +69,7 @@ void Render::Start() {
 }
 
 void Render::MessageBox(std::string msg) {
-    SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "OGMr", msg.c_str(), window);
+    SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "Hyper Scratch", msg.c_str(), window);
 }
 
 void Render::Scale(int x, int y) {

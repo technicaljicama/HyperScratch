@@ -15,6 +15,11 @@ MainApp::MainApp() {
         renderer.getWH(g_Textures[i], costumes[i].w, costumes[i].h);
     }
     
+    for(int i = 0; i < MAX_STAGES; i++) {
+        g_StageTextures[i] = renderer.LoadSprite(stages[i].fileName);
+        renderer.getWH(g_Textures[i], costumes[i].w, costumes[i].h);
+    }
+    
     for(int i = 0; i < MAX_SPRITES; i++) {
        _greenFlagClicked[i](sprites[i]); //WARNING: THIS IS NEEDS TO BE CHANGED
        // std::cout << i << std::endl;
@@ -54,12 +59,14 @@ void MainApp::update() {
                 // std::cout << gWhileLoop << std::endl;
             }
         }
+        
+        renderer.DrawSprite(g_StageTextures[0], 0, 0, 480, 360, 0, 0);
         // std::cout << sprites[0].currentCostume << std::endl;
         
         for(int i = 0; i < MAX_SPRITES; i++) {
             // std::cout << i << std::endl;
             renderer.DrawSprite(g_Textures[sprites[i].currentCostume], sprites[i].x, sprites[i].y, costumes[sprites[i].currentCostume].w, costumes[sprites[i].currentCostume].h, 0, 0);
-         }
+        }
         
         renderer.Update();
     }

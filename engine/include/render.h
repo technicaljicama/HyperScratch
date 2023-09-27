@@ -31,7 +31,7 @@ private:
 };
 
 inline SDL_Texture* g_Textures[MAX_SPRITES];
-
+inline SDL_Texture* g_StageTextures[MAX_STAGES];
 // inline Render renderer;
 
 #endif

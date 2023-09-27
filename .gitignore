@@ -20,6 +20,7 @@ HyperScratch
 *.obj
 *.png
 *.svg
+*.wav
 # Precompiled Headers
 *.gch
 *.pch

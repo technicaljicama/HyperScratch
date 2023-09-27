@@ -24,10 +24,14 @@ gCostumes = []
 #[name, x, y, current, costume_name, layer]
 gSprites = []
 
+#[name, md5name]
+gStages = []
+
 gCode = """
 #include "sprite.h"
 #include "costume.h"\n
 #include "blocks.h"\n
+#include "stage.h"\n
 inline int gWhileLoop = -1;\n
 """
 
@@ -59,7 +63,15 @@ def write_sprites():
         gCode += """\t{\""""+sprite[0]+"""\", """+str(sprite[1])+""", """+str(sprite[2])+""", """+str(sprite[3])+""", \""""+sprite[4][:-4]+".png"+"""\", """+str(sprite[5])+"""},\n"""
         
     gCode += """};\n"""
+
+def write_stages():
+    global gCode
+
+    gCode += """#define MAX_STAGES """+str(len(gStages))+"""\ninline Stage stages["""+str(len(gStages))+"""] = {\n"""
+    for stage in gStages:
+        gCode += """\t{\""""+stage[0]+"""\", \""""+stage[1][:-4]+".png"+"""\"},\n"""
         
+    gCode += """};\n"""
     # print(gCode)
 
 def parse_sline(block, iterator):
@@ -105,8 +117,8 @@ def write_blocks():
     for block in gBlocks:
         iterator += 1
         if block[5] != True:
-            if block[0] != prev_owner:
-                gCode += """//"""
+            # if block[0] != prev_owner:
+                # gCode += """//"""
                 
             if block[1].startswith("event_"):
                 if has_block:
@@ -208,6 +220,9 @@ def parse_costumes(costumes, sprite_index):
 def parse_sprite(sprite, costume, currentCostume):
     gSprites.append([sprite["name"], int(240+sprite["x"]-costume["rotationCenterX"]), int(180-(sprite["y"]+costume["rotationCenterY"])), sprite["currentCostume"]+currentCostume, costume["md5ext"], sprite["layerOrder"]])
 
+def parse_stage(costume):
+    gStages.append([costume["name"], costume["assetId"]+"."+costume["dataFormat"]])
+
 if __name__ == "__main__":
     spriteidx = -1
     stageidx = -1
@@ -236,12 +251,13 @@ if __name__ == "__main__":
                 parse_costumes(costume, spriteidx)
                 
             parse_sprite(objects, costume, currentCostume)
-        else:
+        elif objects["isStage"] == True:
             print("Parse stage...")
             stageidx += 1
             for costume in objects["costumes"]:
                 # currentCostume += 1
-                # parse_costumes(costume, spriteidx)
+                print(costume)
+                parse_stage(costume)
                 
             # parse_sprite(objects, costume, currentCostume)
     
@@ -258,6 +274,7 @@ if __name__ == "__main__":
     print("Writing sprite code...")
     write_sprites()
     write_costumes()
+    write_stages()
     
     print("Converting blocks to c++...")
     write_blocks()
