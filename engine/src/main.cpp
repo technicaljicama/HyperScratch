@@ -39,28 +39,31 @@ void MainApp::update() {
                     quit = true;
                     break;
                 case SDL_MOUSEBUTTONDOWN:
-                    if(mouse == false) { 
-                        // i = 1;
-                        mouse = true;
+                    if(mDown == false) { 
+                        mDown = true;
                     } else {
                         // i = 0;
-                        mouse = false;
+                        mDown = false;
                     }
                     break;
                 case SDL_MOUSEBUTTONUP:
-                    mouse = false;
+                    mDown = false;
                     // i = 0;
                     break;
             }
         }
         if(gWhileLoop != -1) {
             for(int i = 0; i < gWhileLoop+1; i++) {
-                _whileLoops[i](sprites[i]); //WARNING: THIS IS NEEDS TO BE CHANGED
+                if(sprites[i].frameDelay != 0) {
+                    sprites[i].frameDelay--;
+                } else {
+                    _whileLoops[i](sprites[i]); //WARNING: THIS IS NEEDS TO BE CHANGED
+                }
                 // std::cout << gWhileLoop << std::endl;
             }
         }
         
-        renderer.DrawSprite(g_StageTextures[0], 0, 0, 480, 360, 0, 0);
+        renderer.DrawSprite(g_StageTextures[g_CurrentStage], 0, 0, 480, 360, 0, 0);
         // std::cout << sprites[0].currentCostume << std::endl;
         
         for(int i = 0; i < MAX_SPRITES; i++) {

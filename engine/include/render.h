@@ -28,6 +28,10 @@ private:
     SDL_Renderer *rend;
     SDL_Rect m_clip;
     SDL_Rect m_pos;
+    
+    int currentTime = 0;
+    int previousTime = 0;
+    bool firstFrame = true;
 };
 
 inline SDL_Texture* g_Textures[MAX_SPRITES];

@@ -61,7 +61,17 @@ void Render::deleteTex(SDL_Texture* tex) {
 
 void Render::Update() {
     SDL_RenderPresent(rend);
-    SDL_Delay(20); 
+    if(firstFrame) {
+        firstFrame = false;
+        previousTime = SDL_GetTicks();
+    } else {
+        previousTime = currentTime;
+    }
+    currentTime = SDL_GetTicks();
+    // SDL_Delay(20); 
+    // std::cout << (1000 / 60 - currentTime) + previousTime << std::endl;
+    int delay = (1000 / 60 - currentTime) + previousTime;
+    SDL_Delay(std::abs(delay));
 }
 
 void Render::Start() {
