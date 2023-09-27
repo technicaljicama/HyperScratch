@@ -10,8 +10,8 @@ inline int gWhileLoop = -1;
 
 #define MAX_SPRITES 2
 inline Sprite sprites[2] = {
-	{"Sprite1", 131, 175, 1, "bfd67b7240c0a2658bb27af034a443e4.png", 1},
-	{"Abby", 145, 127, 8, "45de34b47a2ce22f6f5d28bb35a44ff5.png", 2},
+	{"Sprite1", 58, 149, 1, "bfd67b7240c0a2658bb27af034a443e4.png", 1},
+	{"Abby", 72, 101, 8, "45de34b47a2ce22f6f5d28bb35a44ff5.png", 2},
 };
 #define MAX_COSTUMES 6
 inline Costume costumes[6] = {
@@ -22,37 +22,43 @@ inline Costume costumes[6] = {
 	{"abby-c", "34a175600dc009a521eb46fdbbbeeb67.png", 1, 0 , 0, 32, 100},
 	{"abby-d", "45de34b47a2ce22f6f5d28bb35a44ff5.png", 1, 0 , 0, 32, 101},
 };
-#define MAX_STAGES 1
-inline Stage stages[1] = {
+#define MAX_STAGES 2
+inline Stage stages[2] = {
 	{"Bench With View", "962201a2b712a302fb087f8f0dcb2076.png"},
+	{"Blue Sky", "e7c147730f19d284bcd7b3f00af19bb6.png"},
 };
-inline void event_whenflagclickedblock_0james8(Sprite &_sprite) {
+inline void event_whenflagclickedblock_0kenneth0(Sprite &_sprite) {
 	looks_switchcostumeto("costume1", _sprite);
 	gWhileLoop++;
 };
-inline void control_foreverblock_3curtis10(Sprite &_sprite) {
+inline void control_foreverblock_3rosa6(Sprite &_sprite) {
 	motion_goto("Abby", _sprite);
 	looks_switchcostumeto("costume1", _sprite);
 	motion_goto("Abby", _sprite);
 };
-inline void event_whenflagclickedblock_8robert1(Sprite &_sprite) {
+inline void event_whenflagclickedblock_8chasity8(Sprite &_sprite) {
 	gWhileLoop++;
 };
-inline void control_foreverblock_9gerald0(Sprite &_sprite) {
+inline void control_foreverblock_9mary3(Sprite &_sprite) {
+	control_if(aaaaaaaaa, _sprite);
 	motion_goto("_random_", _sprite);
-	motion_goto("_random_", _sprite);
+	looks_switchbackdropto("next backdrop", _sprite);
+	looks_switchbackdropto("next backdrop", _sprite);
+
+	if(sensing_mousedown()) {
+	sensing_mousedown(_sprite);
 };
 
 #define MAX_WHILES 2
 inline void(*_whileLoops[2])(Sprite &_sprite) {
-	&control_foreverblock_3curtis10,
-	&control_foreverblock_9gerald0,
+	&control_foreverblock_3rosa6,
+	&control_foreverblock_9mary3,
 };
 
 inline void(*_spriteClicked[0])(Sprite &_sprite) {
 };
 
 inline void(*_greenFlagClicked[2])(Sprite &_sprite) {
-	&event_whenflagclickedblock_0james8,
-	&event_whenflagclickedblock_8robert1,
+	&event_whenflagclickedblock_0kenneth0,
+	&event_whenflagclickedblock_8chasity8,
 };

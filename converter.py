@@ -77,6 +77,8 @@ def write_stages():
 def parse_sline(block, iterator):
     global gCode
     
+    # print(block[1])
+    
     if block[4] != {}:
         gCode += """\t"""+block[1]+"""("""+parse_argument(block, gBlocks[iterator + 1])+""", _sprite);\n"""
     else:
@@ -86,11 +88,18 @@ def parse_argument(block, next_block):
     #Will improve this later... (I hope)
     global gCode
     
+    print(block[1])
+    
     args = block[4]
     match block[1]:
         case "looks_switchcostumeto":
             if next_block[1] == "looks_costume" and next_block[3] == args["COSTUME"][1]:
                 return "\""+next_block[4]["COSTUME"][0]+"\""
+            
+        case "looks_switchbackdropto":
+            if next_block[1] == "looks_backdrops" and next_block[3] == args["BACKDROP"][1]:
+                return "\""+next_block[4]["BACKDROP"][0]+"\""  
+            
         case "motion_goto":
             if next_block[1] == "motion_goto_menu" and next_block[3] == args["TO"][1]:
                 return "\""+next_block[4]["TO"][0]+"\""
@@ -102,6 +111,16 @@ def parse_argument(block, next_block):
                 iterator += 1
                 if block[3] == to_find:
                     parse_sline(block, iterator)
+                    
+        case "control_if":
+            cond = block[4]["CONDITION"][1]
+            for blocky in gBlocks:
+                if blocky[3] == cond:
+                    # iterator = -1
+                    gCode += """\n\tif("""+blocky[1]+"""()) {\n"""
+                    return "fixme_fixme_fixme"
+                    # print(block[4])
+                    
             
 
 def write_blocks():
@@ -132,7 +151,14 @@ def write_blocks():
                 gCode += """inline void """+block[1]+block[3]+"""(Sprite &_sprite) {\n"""
                 gControlBlocks.append([block[1], block[3]])
                 parse_argument(block, block)
+            elif block[1] == "control_if":
+                # gCode += """\tgWhileLoop++;\n"""
+                # gCode += """};\n"""
+                # gCode += """inline void """+block[1]+block[3]+"""(Sprite &_sprite) {\n"""
+                # gControlBlocks.append([block[1], block[3]])
+                parse_argument(block, block)
             else:
+                
                 has_block = True
                 parse_sline(block, iterator)
                 
