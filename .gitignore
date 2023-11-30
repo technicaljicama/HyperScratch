@@ -10,6 +10,10 @@ compile_commands.json
 CTestTestfile.cmake
 _deps
 HyperScratch
+assets
+project.h
+project.json
+*.wav
 # Prerequisites
 *.d
 

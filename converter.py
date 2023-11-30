@@ -13,9 +13,11 @@ Resource (images and sound) parser
 svg to png converter
 """
 
+gAssetsPrefix = "assets/"
+
 #480x360 res
 
-#[What object?, What opcode?, Next opcode, This name, args, shadow(hidden)]
+#[What object?, What opcode?, Next opcode, This name, args, shadow(hidden), fields]
 gBlocks = []
 
 #[name, filename, centerX, centerY, sprite_index]
@@ -36,6 +38,8 @@ inline int gWhileLoop = -1;\n
 """
 
 gBroadcasts = []
+
+#[new_name, old_name, real_name, value]
 gVariables = []
 
 #[event name, junk name]
@@ -50,11 +54,19 @@ gTarget = -1
 
 def convert_svg(name):
     if "svg" in name:
-        f = open(name, "rb")
+        f = open(gAssetsPrefix+name, "rb")
         
-        svg2png(bytestring=f.read(), write_to=name[:-4]+".png")
+        svg2png(bytestring=f.read(), write_to=gAssetsPrefix+name[:-4]+".png")
         
         f.close()
+
+def write_variables():
+    global gCode
+    
+    for var in gVariables:
+        gCode += """inline std::string """+var[0]+" = \""+str(var[3])+"\";\n"
+        
+    gCode += "\n"
 
 def write_sprites():
     global gCode
@@ -110,7 +122,10 @@ def parse_argument(block, next_block):
             if next_block[1] == "looks_costume" and next_block[3] == args["COSTUME"][1]:
                 return "\""+next_block[4]["COSTUME"][0]+"\""
             else:
-                return "\""+find_block(args["COSTUME"][1])[4]["COSTUME"][0]+"\""
+                try:
+                    return "\""+find_block(args["COSTUME"][1])[4]["COSTUME"][0]+"\""
+                except:
+                    print(args)
             
         case "looks_switchbackdropto":
             if next_block[1] == "looks_backdrops" and next_block[3] == args["BACKDROP"][1]:
@@ -123,7 +138,13 @@ def parse_argument(block, next_block):
                 return "\""+next_block[4]["TO"][0]+"\""
             else:
                 return "\""+find_block(args["TO"][1])[4]["TO"][0]+"\""
-                
+              
+        case "motion_gotoxy":
+            return str(args["X"][1][1])+", "+str(args["Y"][1][1])
+        
+        case "data_setvariableto":
+            return find_var_by_name(block[6]["VARIABLE"][1])+", \""+str(args["VALUE"][1][1])+"\""
+            
             
         case "control_wait":
             # print(block[4])
@@ -240,10 +261,11 @@ def export_code(filename):
     f.close()
 
 def parse_blocks(array, name):
+    # print(array)
     if array["shadow"] == True:
-        gBlocks.append([gTarget, array["opcode"], array["next"], name, array["fields"], True])
+        gBlocks.append([gTarget, array["opcode"], array["next"], name, array["fields"], True, array["inputs"]])
     else:
-        gBlocks.append([gTarget, array["opcode"], array["next"], name, array["inputs"], False])
+        gBlocks.append([gTarget, array["opcode"], array["next"], name, array["inputs"], False, array["fields"]])
 
 def rename_blocks(blocks):
     global gBlocks
@@ -272,6 +294,20 @@ def parse_sprite(sprite, costume, currentCostume):
 
 def parse_stage(costume):
     gStages.append([costume["name"], costume["assetId"]+"."+costume["dataFormat"]])
+
+def parse_variables(svars):
+    global gVariables
+    
+    for var in svars:
+        new_name = "var_"+names.get_first_name().lower()+str(random.randint(0, 10))
+        print("Variable: "+new_name)
+        
+        gVariables.append([new_name, var, svars[var][0], svars[var][1]])
+
+def find_var_by_name(name):
+    for var in gVariables:
+        if var[1] == name:
+            return var[0]
 
 if __name__ == "__main__":
     spriteidx = -1
@@ -309,6 +345,8 @@ if __name__ == "__main__":
                 print(costume)
                 parse_stage(costume)
                 
+            parse_variables(objects["variables"])
+                
             # parse_sprite(objects, costume, currentCostume)
     
     print("Renaming blocks...")
@@ -316,11 +354,14 @@ if __name__ == "__main__":
     
     # print("Parsing costumes...")
     # parse_costumes()
-    print(gBlocks)
+    # print(gBlocks)
     print("Converting svgs...")
     for svg in gCostumes:
         convert_svg(svg[1])
-        
+    
+    print("Writing variables...")
+    write_variables()
+    
     print("Writing sprite code...")
     write_sprites()
     write_costumes()
